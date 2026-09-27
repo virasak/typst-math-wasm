@@ -1,4 +1,6 @@
 /target
+pkg/
+*.tgz
 node_modules
 .DS_Store
 *.log

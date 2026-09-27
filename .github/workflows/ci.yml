@@ -54,14 +54,29 @@ jobs:
             });
           '
 
-  stage-publish:
-    name: Stage publish to npm
+      - name: Upload build artifacts
+        if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pkg
+          path: pkg/
+
+  release:
+    name: Release (GitHub & npm stage)
     needs: build
     if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: pkg
+          path: pkg/
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -69,7 +84,23 @@ jobs:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Stage publish package to npm
+      - name: Pack release tarball
+        run: npm pack
+
+      - name: Upload to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            *.tgz
+            pkg/typst_math_wasm_bg.wasm
+            pkg/typst_math_wasm.js
+            pkg/typst_math_wasm.d.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Stage publish to npm
+        if: env.NODE_AUTH_TOKEN != ''
         run: npm run stage:publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
