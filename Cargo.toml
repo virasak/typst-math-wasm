@@ -8,12 +8,16 @@ repository = "https://github.com/virasak/typst-math-wasm"
 keywords = ["typst", "wasm", "math", "svg", "compiler"]
 
 [lib]
-crate-type = ["cdylib", "rlib"]
+crate-type = ["cdylib"]
 
 [dependencies]
 typst = { version = "0.13.1", default-features = false }
 typst-svg = { version = "0.13.1", default-features = false }
 wasm-bindgen = "0.2"
+miniz_oxide = "0.8"
+
+[build-dependencies]
+miniz_oxide = "0.8"
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = false
@@ -24,3 +28,7 @@ lto = "fat"
 codegen-units = 1
 panic = "abort"
 strip = true
+overflow-checks = false
+
+[patch.crates-io]
+typst-library = { path = "crates/typst-library" }

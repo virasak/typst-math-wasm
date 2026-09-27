@@ -10,11 +10,11 @@ use typst::World;
 use typst::utils::LazyHash;
 use std::sync::OnceLock;
 
-// Embedded New Computer Modern fonts (matching KaTeX's look and metrics)
-const NEW_CM_MATH_REGULAR: &[u8] = include_bytes!("fonts/NewCMMath-Regular.otf");
-const NEW_CM_REGULAR: &[u8] = include_bytes!("fonts/NewCM10-Regular.otf");
-const NEW_CM_BOLD: &[u8] = include_bytes!("fonts/NewCM10-Bold.otf");
-const NEW_CM_ITALIC: &[u8] = include_bytes!("fonts/NewCM10-Italic.otf");
+// Embedded New Computer Modern fonts (matching KaTeX's look and metrics), zlib-compressed
+const NEW_CM_MATH_REGULAR: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/NewCMMath-Regular.otf.zlib"));
+const NEW_CM_REGULAR: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/NewCM10-Regular.otf.zlib"));
+const NEW_CM_BOLD: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/NewCM10-Bold.otf.zlib"));
+const NEW_CM_ITALIC: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/NewCM10-Italic.otf.zlib"));
 
 static LIBRARY: OnceLock<LazyHash<Library>> = OnceLock::new();
 static FONTS: OnceLock<(Vec<Font>, LazyHash<FontBook>)> = OnceLock::new();
@@ -23,8 +23,10 @@ fn load_fonts() -> (Vec<Font>, LazyHash<FontBook>) {
     let mut fonts = Vec::new();
     let mut book = FontBook::new();
 
-    for font_data in [NEW_CM_MATH_REGULAR, NEW_CM_REGULAR, NEW_CM_BOLD, NEW_CM_ITALIC] {
-        let buffer = Bytes::new(font_data.to_vec());
+    for compressed in [NEW_CM_MATH_REGULAR, NEW_CM_REGULAR, NEW_CM_BOLD, NEW_CM_ITALIC] {
+        let decompressed = miniz_oxide::inflate::decompress_to_vec_zlib(compressed)
+            .expect("corrupt embedded font data");
+        let buffer = Bytes::new(decompressed);
         for font in Font::iter(buffer) {
             book.push(font.info().clone());
             fonts.push(font);

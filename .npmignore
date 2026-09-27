@@ -1,0 +1,9 @@
+target/
+crates/
+src/
+build.rs
+Cargo.toml
+Cargo.lock
+.github/
+.gitignore
+test.js

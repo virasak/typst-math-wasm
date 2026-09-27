@@ -16,10 +16,10 @@ Full Typst web toolchains (such as `@myriaddreamin/typst.ts`) are feature-rich c
 
 | Metric | `@myriaddreamin/typst.ts` | `typst-math-wasm` | Improvement |
 | :--- | :--- | :--- | :--- |
-| **Compiler WASM Size** | **28.32 MiB** | **15.36 MiB** | **-45.8% (-12.96 MiB)** |
+| **Compiler WASM Size** | **28.32 MiB** | **8.72 MiB** | **-69.2% (-19.60 MiB)** |
 | **Renderer WASM Size** | 0.95 MiB | *None (built-in SVG)* | **Eliminated** |
-| **Gzipped Transfer** | ~11.8 MiB | **7.29 MiB** | **-38.2%** |
-| **Cloudflare Workers Asset Limit** | ❌ Exceeds 25 MiB | ✅ **Fits cleanly (< 16 MiB)** | **Deployable** |
+| **Gzipped Transfer** | ~11.8 MiB | **4.98 MiB** | **-57.8% (-6.82 MiB)** |
+| **Cloudflare Workers Asset Limit** | ❌ Exceeds 25 MiB | ✅ **Fits cleanly (< 9 MiB)** | **Deployable** |
 | **Font Loading** | Asynchronous / IPC | **Zero latency (embedded)** | **Self-contained** |
 
 ### Embedded Fonts
