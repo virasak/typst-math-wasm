@@ -1,5 +1,5 @@
 {
-  "name": "typst-math-wasm",
+  "name": "@virasak/typst-math-wasm",
   "version": "0.1.0",
   "description": "Lightweight math-only WebAssembly Typst compiler with embedded Computer Modern fonts",
   "type": "module",
@@ -17,10 +17,16 @@
     "README.md",
     "LICENSE"
   ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "stage"
+  },
   "scripts": {
-    "build:wasm": "wasm-pack build --target web --release --out-dir pkg",
+    "build:wasm": "wasm-pack build --target web --release --out-dir pkg && node -e 'const p = \"pkg/package.json\"; if (fs.existsSync(p)) { const j = JSON.parse(fs.readFileSync(p)); j.name = \"@virasak/typst-math-wasm\"; fs.writeFileSync(p, JSON.stringify(j, null, 2) + \"\\n\"); }'",
     "opt:wasm": "wasm-opt --all-features -Oz pkg/typst_math_wasm_bg.wasm -o pkg/typst_math_wasm_bg.wasm",
-    "build": "npm run build:wasm && npm run opt:wasm"
+    "build": "npm run build:wasm && npm run opt:wasm",
+    "publish:stage": "npm publish --access public --tag stage",
+    "publish:latest": "npm publish --access public --tag latest"
   },
   "repository": {
     "type": "git",

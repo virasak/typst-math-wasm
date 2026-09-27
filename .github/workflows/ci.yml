@@ -6,6 +6,7 @@ on:
     tags: ['v*']
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -53,10 +54,10 @@ jobs:
             });
           '
 
-  publish:
-    name: Publish to npm
+  publish-stage:
+    name: Publish to npm (stage)
     needs: build
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -68,7 +69,7 @@ jobs:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Publish package
-        run: npm publish --access public
+      - name: Publish package to npm (stage tag)
+        run: npm run publish:stage
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
