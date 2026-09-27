@@ -106,7 +106,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Stage publish to npm
-        if: ${{ secrets.NPM_TOKEN != '' }}
-        run: npm run stage:publish
+        run: |
+          if [ -n "$NODE_AUTH_TOKEN" ]; then
+            npm run stage:publish
+          else
+            echo "NPM_TOKEN secret is not configured; skipping npm stage publish"
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
