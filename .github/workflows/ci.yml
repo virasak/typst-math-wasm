@@ -35,8 +35,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: 'https://registry.npmjs.org'
+
+      - name: Upgrade npm to latest (npm 11+ with stage support)
+        run: npm install -g npm@latest
 
       - name: Build WebAssembly package
         run: npm run build
@@ -81,8 +84,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           registry-url: 'https://registry.npmjs.org'
+
+      - name: Upgrade npm to latest (npm 11+ with stage support)
+        run: npm install -g npm@latest
 
       - name: Pack release tarball
         run: npm pack
@@ -100,7 +106,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Stage publish to npm
-        if: env.NODE_AUTH_TOKEN != ''
+        if: ${{ secrets.NPM_TOKEN != '' }}
         run: npm run stage:publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
