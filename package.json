@@ -1,0 +1,45 @@
+{
+  "name": "typst-math-wasm",
+  "version": "0.1.0",
+  "description": "Lightweight math-only WebAssembly Typst compiler with embedded Computer Modern fonts",
+  "type": "module",
+  "main": "./pkg/typst_math_wasm.js",
+  "types": "./pkg/typst_math_wasm.d.ts",
+  "exports": {
+    ".": {
+      "types": "./pkg/typst_math_wasm.d.ts",
+      "import": "./pkg/typst_math_wasm.js"
+    },
+    "./wasm": "./pkg/typst_math_wasm_bg.wasm"
+  },
+  "files": [
+    "pkg",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build:wasm": "wasm-pack build --target web --release --out-dir pkg",
+    "opt:wasm": "wasm-opt --all-features -Oz pkg/typst_math_wasm_bg.wasm -o pkg/typst_math_wasm_bg.wasm",
+    "build": "npm run build:wasm && npm run opt:wasm"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/virasak/typst-math-wasm.git"
+  },
+  "keywords": [
+    "typst",
+    "math",
+    "wasm",
+    "webassembly",
+    "katex",
+    "svg",
+    "latex",
+    "formula"
+  ],
+  "author": "Virasak Dungsrikaew",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/virasak/typst-math-wasm/issues"
+  },
+  "homepage": "https://github.com/virasak/typst-math-wasm#readme"
+}

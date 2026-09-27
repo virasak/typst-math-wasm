@@ -1,0 +1,26 @@
+[package]
+name = "typst-math-wasm"
+version = "0.1.0"
+edition = "2021"
+description = "Lightweight math-only Typst WebAssembly compiler with embedded fonts"
+license = "MIT"
+repository = "https://github.com/virasak/typst-math-wasm"
+keywords = ["typst", "wasm", "math", "svg", "compiler"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+typst = { version = "0.13.1", default-features = false }
+typst-svg = { version = "0.13.1", default-features = false }
+wasm-bindgen = "0.2"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
+[profile.release]
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
