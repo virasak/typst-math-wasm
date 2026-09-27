@@ -18,15 +18,15 @@
     "LICENSE"
   ],
   "publishConfig": {
-    "access": "public",
-    "tag": "stage"
+    "access": "public"
   },
   "scripts": {
     "build:wasm": "wasm-pack build --target web --release --out-dir pkg && node -e 'const p = \"pkg/package.json\"; if (fs.existsSync(p)) { const j = JSON.parse(fs.readFileSync(p)); j.name = \"@virasak/typst-math-wasm\"; fs.writeFileSync(p, JSON.stringify(j, null, 2) + \"\\n\"); }'",
     "opt:wasm": "wasm-opt --all-features -Oz pkg/typst_math_wasm_bg.wasm -o pkg/typst_math_wasm_bg.wasm",
     "build": "npm run build:wasm && npm run opt:wasm",
-    "publish:stage": "npm publish --access public --tag stage",
-    "publish:latest": "npm publish --access public --tag latest"
+    "stage:publish": "npm stage publish --access public",
+    "stage:list": "npm stage list",
+    "publish": "npm publish --access public"
   },
   "repository": {
     "type": "git",

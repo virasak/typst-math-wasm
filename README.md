@@ -33,11 +33,6 @@ The New Computer Modern font family (`NewCMMath-Regular`, `NewCM10-Regular`, `Ne
 npm install @virasak/typst-math-wasm
 ```
 
-Or install the staged version:
-```bash
-npm install @virasak/typst-math-wasm@stage
-```
-
 Or install directly from GitHub:
 ```bash
 npm install github:virasak/typst-math-wasm
@@ -96,6 +91,23 @@ Requirements:
 ```bash
 # Build WASM and run wasm-opt -Oz
 npm run build
+```
+
+---
+
+## Staged Publishing (`npm stage publish`)
+
+This package uses npm's [staged publishing workflow](https://docs.npmjs.com/cli/commands/npm-stage-publish) for human-in-the-loop security verification:
+
+```bash
+# 1. Stage the package for publishing (defers 2FA)
+npm run stage:publish
+
+# 2. View staged package versions
+npm run stage:list
+
+# 3. Approve and publish to the registry (requires 2FA)
+npm stage approve <stage-id>
 ```
 
 ---
