@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>typst-math-wasm Playground — Lightweight Typst Math to SVG</title>
+  <meta name="description" content="Interactive demo and playground for @virasak/typst-math-wasm: compile Typst math formulas to crisp SVG in WebAssembly with embedded Computer Modern fonts.">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#" class="brand">
+        <div class="brand-logo">T</div>
+        <div class="brand-text">
+          <h1>typst-math-wasm <span class="version-badge">v0.1.0</span></h1>
+          <p class="brand-subtitle">Self-contained Typst math compiler to SVG</p>
+        </div>
+      </a>
+      <div class="header-actions">
+        <button id="themeToggle" class="btn-icon" aria-label="Toggle theme">☀️ Light</button>
+        <a href="https://www.npmjs.com/package/@virasak/typst-math-wasm" target="_blank" rel="noopener noreferrer" class="btn-icon">
+          <svg width="16" height="16" viewBox="0 0 780 250" fill="currentColor">
+            <path d="M240,250h100v-50h100V0H240V250z M340,50h50v100h-50V50z M480,0v200h100V50h50v150h50V50h50v150h50V0H480z M0,200h100V50h50v150h50V0H0V200z"/>
+          </svg>
+          npm
+        </a>
+        <a href="https://github.com/virasak/typst-math-wasm" target="_blank" rel="noopener noreferrer" class="btn-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+    <!-- Value Proposition Banner -->
+    <section class="stats-banner" aria-label="Key features">
+      <div class="stats-items">
+        <div class="stat-item">
+          <span class="stat-dot"></span>
+          <span>WASM Size: <strong>15.36 MiB</strong> (fits < 25MB Cloudflare edge limit)</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-dot"></span>
+          <span>Fonts: <strong>Embedded New Computer Modern</strong> (zero network requests)</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-dot"></span>
+          <span>Speed: <strong>Sub-5ms compilation</strong> directly to SVG</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Playground Section -->
+    <section class="playground-grid" aria-label="Interactive Playground">
+      <!-- Left Panel: Input & Settings -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            Typst Math Input
+          </span>
+          <div class="preview-controls">
+            <button id="btnCopyTypst" class="control-btn" title="Copy Typst Code">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Copy Code
+            </button>
+          </div>
+        </div>
+
+        <!-- Presets Bar -->
+        <div class="preset-bar" id="presetBar" role="tablist" aria-label="Preset formulas">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- Quick Insert Snippets -->
+        <div class="snippet-bar" aria-label="Quick symbol inserts">
+          <button class="snippet-tag" data-insert="sum_(k=1)^n ">sum</button>
+          <button class="snippet-tag" data-insert="integral_(-oo)^oo ">integral</button>
+          <button class="snippet-tag" data-insert="sqrt(x)">sqrt</button>
+          <button class="snippet-tag" data-insert="vec(x, y)">vec</button>
+          <button class="snippet-tag" data-insert="mat(a, b; c, d)">mat</button>
+          <button class="snippet-tag" data-insert="cases(a &amp; b, c &amp; d)">cases</button>
+          <button class="snippet-tag" data-insert="bold(x)">bold</button>
+          <button class="snippet-tag" data-insert="alpha">alpha</button>
+          <button class="snippet-tag" data-insert="beta">beta</button>
+          <button class="snippet-tag" data-insert="pi">pi</button>
+          <button class="snippet-tag" data-insert="oo">oo</button>
+          <button class="snippet-tag" data-insert="+-">+-</button>
+          <button class="snippet-tag" data-insert="dif x">dif x</button>
+        </div>
+
+        <!-- Editor Area -->
+        <div class="editor-container">
+          <textarea
+            id="codeEditor"
+            class="code-editor"
+            spellcheck="false"
+            autocomplete="off"
+            placeholder="Type your Typst markup here (e.g. $ x = y $)..."
+          ></textarea>
+        </div>
+
+        <!-- Options Footer -->
+        <div class="editor-footer">
+          <div class="toggle-group">
+            <label class="toggle-label" title="Wrap in #set page(width: auto, height: auto, margin: 0.6em)">
+              <input type="checkbox" id="optTightCrop" checked>
+              <span>Tight Crop</span>
+            </label>
+            <label class="toggle-label" title="Transparent background with no page rect">
+              <input type="checkbox" id="optTransparent" checked>
+              <span>Transparent</span>
+            </label>
+            <label class="toggle-label" title="Adapt text color to theme when transparent">
+              <input type="checkbox" id="optAutoTextColor" checked>
+              <span>Auto Color</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel: Output & Inspector -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            SVG Output
+          </span>
+          <div class="preview-controls">
+            <span id="compileTimeBadge" class="metrics-pill">⚡ 0.0ms</span>
+            <span id="dimensionsBadge" class="control-btn" style="cursor: default;">0 × 0</span>
+            
+            <div class="preview-controls" style="margin-left: 0.25rem;">
+              <button class="control-btn zoom-btn" data-scale="1">1x</button>
+              <button class="control-btn zoom-btn active" data-scale="1.5">1.5x</button>
+              <button class="control-btn zoom-btn" data-scale="2">2x</button>
+            </div>
+
+            <button id="btnToggleRaw" class="control-btn" title="Toggle Raw SVG Code">
+              <span>Code</span>
+            </button>
+            <button id="btnCopySvg" class="control-btn" title="Copy Raw SVG">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Copy SVG
+            </button>
+            <button id="btnDownloadSvg" class="control-btn" title="Download SVG File">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Download
+            </button>
+          </div>
+        </div>
+
+        <div class="preview-container">
+          <!-- Error Alert Banner -->
+          <div id="errorBanner" class="error-banner"></div>
+
+          <!-- Visual Stage -->
+          <div class="preview-stage" id="previewStage">
+            <div class="svg-viewport" id="svgViewport"></div>
+          </div>
+
+          <!-- Raw Code Container (hidden by default) -->
+          <div class="raw-code-container" id="rawCodeContainer">
+            <pre class="raw-code" id="rawCode"></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Docs & Integration Section -->
+    <section class="docs-section">
+      <div class="doc-card">
+        <h3>🚀 Quickstart (Vite / Browser)</h3>
+        <pre class="code-block"><code><span class="keyword">import</span> init, { compile_to_svg } <span class="keyword">from</span> <span class="string">'@virasak/typst-math-wasm'</span>;
+<span class="keyword">import</span> wasmUrl <span class="keyword">from</span> <span class="string">'@virasak/typst-math-wasm/wasm?url'</span>;
+
+<span class="comment">// 1. Initialize once with WASM URL</span>
+<span class="keyword">await</span> <span class="func">init</span>({ module_or_path: wasmUrl });
+
+<span class="comment">// 2. Compile math formula to SVG</span>
+<span class="keyword">const</span> svg = <span class="func">compile_to_svg</span>(<span class="string">`#set page(width: auto, height: auto, margin: 0.5em)
+$ sum_(k=1)^n k = (n(n+1))/2 $`</span>);
+
+document.getElementById(<span class="string">'math'</span>).innerHTML = svg;</code></pre>
+      </div>
+
+      <div class="doc-card">
+        <h3>📦 Architecture Highlights</h3>
+        <pre class="code-block"><code><span class="comment">// Why use @virasak/typst-math-wasm?</span>
+• <span class="keyword">Standalone</span>: Typst compiler + embedded New Computer Modern fonts.
+• <span class="keyword">No Font IPC</span>: Never fetches fonts over network or WebSockets.
+• <span class="keyword">Edge Compatible</span>: < 16 MiB (Cloudflare Workers Static Assets).
+• <span class="keyword">Pure SVG output</span>: Vector crispness at any scale and DPI.
+• <span class="keyword">Zero runtime dependencies</span>: Self-contained WebAssembly binary.</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span id="toastMessage">Copied!</span>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
