@@ -304,7 +304,7 @@ async function start() {
     svgViewport.innerHTML = '<span style="color: var(--text-muted); font-size: 0.85rem;">Initializing WebAssembly module (~15MB)...</span>';
     
     // Initialize WebAssembly
-    await init('./pkg/typst_math_wasm_bg.wasm');
+    await init(new URL('./pkg/typst_math_wasm_bg.wasm', import.meta.url));
     wasmReady = true;
 
     // Initial compile
